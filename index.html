@@ -318,7 +318,7 @@
 
             if (userPast === correctPast && userParticiple === correctParticiple) {
                 correctAnswers++;
-                document.getElementById("result").textContent = "✅ ¡Correct!";
+                document.getElementById("result").textContent = "✅ Correct!";
                 document.getElementById("result").classList.add("correct");
             } else {
                 document.getElementById("result").innerHTML = `❌ Wrong<br>Past Simple: <b>${correctPast}</b><br>Past Participle: <b>${correctParticiple}</b>`;
@@ -328,7 +328,7 @@
             document.getElementById("score").textContent = `Score: ${correctAnswers} / ${totalQuestions}`;
 
             const nextAd = document.getElementById("nextAdvertisement");
-            nextAd.textContent = "¡Atento! viene el siguiente en breve...";
+            nextAd.textContent = "Heads up! The next one is coming soon...";
             nextAd.classList.add("blinking");
 
             setTimeout(randomVerb, 2500);
