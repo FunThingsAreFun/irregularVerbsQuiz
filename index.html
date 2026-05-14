@@ -88,6 +88,25 @@
         .incorrect {
             color: red;
         }
+
+        .nextAdvertisement {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: #d35400;
+            font-weight: bold;
+            min-height: 24px;
+        }
+
+        .nextAdvertisement.blinking {
+            animation: blink 1s steps(2, start) infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 
@@ -107,6 +126,7 @@
 
         <div class="result" id="result"></div>
         <div class="score" id="score">Score: 0 / 0</div>
+        <div class="nextAdvertisement" id="nextAdvertisement"></div>
     </div>
 
     <script>
@@ -276,6 +296,8 @@
 
             document.getElementById("result").textContent = "";
             document.getElementById("result").className = "result";
+            document.getElementById("nextAdvertisement").textContent = "";
+            document.getElementById("nextAdvertisement").classList.remove("blinking");
         }
 
         function checkAnswer() {
@@ -297,6 +319,11 @@
             }
 
             document.getElementById("score").textContent = `Score: ${correctAnswers} / ${totalQuestions}`;
+
+            const nextAd = document.getElementById("nextAdvertisement");
+            nextAd.textContent = "¡Atento! viene el siguiente en breve...";
+            nextAd.classList.add("blinking");
+
             setTimeout(randomVerb, 2500);
         }
 
