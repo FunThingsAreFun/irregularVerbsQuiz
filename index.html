@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Irregular Verbs Quiz</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f5f9;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .quiz-container {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .verb {
+            font-size: 28px;
+            text-align: center;
+            margin: 25px 0;
+            color: #0077cc;
+            font-weight: bold;
+        }
+
+        .inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #0077cc;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #005fa3;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .score {
+            margin-top: 20px;
+            text-align: center;
+            color: #444;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="quiz-container">
+        <h1>Irregular Verbs Quiz</h1>
+
+        <div class="verb" id="baseVerb">go</div>
+
+        <div class="inputs">
+            <input type="text" id="pastSimple" placeholder="Past Simple">
+            <input type="text" id="pastParticiple" placeholder="Past Participle">
+        </div>
+
+        <button onclick="checkAnswer()">Check</button>
+
+        <div class="result" id="result"></div>
+        <div class="score" id="score">Score: 0 / 0</div>
+    </div>
+
+    <script>
+        const verbs = [
+            // IRREGULARES
+            { base: "be", past: "was/were", participle: "been", type: "irregular" },
+            { base: "beat", past: "beat", participle: "beaten", type: "irregular" },
+            { base: "become", past: "became", participle: "become", type: "irregular" },
+            { base: "begin", past: "began", participle: "begun", type: "irregular" },
+            { base: "bend", past: "bent", participle: "bent", type: "irregular" },
+            { base: "bet", past: "bet", participle: "bet", type: "irregular" },
+            { base: "bite", past: "bit", participle: "bitten", type: "irregular" },
+            { base: "blow", past: "blew", participle: "blown", type: "irregular" },
+            { base: "break", past: "broke", participle: "broken", type: "irregular" },
+            { base: "bring", past: "brought", participle: "brought", type: "irregular" },
+            { base: "build", past: "built", participle: "built", type: "irregular" },
+            { base: "burst", past: "burst", participle: "burst", type: "irregular" },
+            { base: "buy", past: "bought", participle: "bought", type: "irregular" },
+            { base: "catch", past: "caught", participle: "caught", type: "irregular" },
+            { base: "choose", past: "chose", participle: "chosen", type: "irregular" },
+            { base: "come", past: "came", participle: "come", type: "irregular" },
+            { base: "cut", past: "cut", participle: "cut", type: "irregular" },
+            { base: "deal", past: "dealt", participle: "dealt", type: "irregular" },
+            { base: "dig", past: "dug", participle: "dug", type: "irregular" },
+            { base: "do", past: "did", participle: "done", type: "irregular" },
+            { base: "draw", past: "drew", participle: "drawn", type: "irregular" },
+            { base: "drink", past: "drank", participle: "drunk", type: "irregular" },
+            { base: "drive", past: "drove", participle: "driven", type: "irregular" },
+            { base: "eat", past: "ate", participle: "eaten", type: "irregular" },
+            { base: "fall", past: "fell", participle: "fallen", type: "irregular" },
+            { base: "feed", past: "fed", participle: "fed", type: "irregular" },
+            { base: "feel", past: "felt", participle: "felt", type: "irregular" },
+            { base: "fight", past: "fought", participle: "fought", type: "irregular" },
+            { base: "find", past: "found", participle: "found", type: "irregular" },
+            { base: "flee", past: "fled", participle: "fled", type: "irregular" },
+            { base: "fly", past: "flew", participle: "flown", type: "irregular" },
+            { base: "forbid", past: "forbade", participle: "forbidden", type: "irregular" },
+            { base: "forget", past: "forgot", participle: "forgotten", type: "irregular" },
+            { base: "forgive", past: "forgave", participle: "forgiven", type: "irregular" },
+            { base: "freeze", past: "froze", participle: "frozen", type: "irregular" },
+            { base: "get", past: "got", participle: "gotten", type: "irregular" },
+            { base: "give", past: "gave", participle: "given", type: "irregular" },
+            { base: "go", past: "went", participle: "gone", type: "irregular" },
+            { base: "grow", past: "grew", participle: "grown", type: "irregular" },
+            { base: "hang", past: "hung", participle: "hung", type: "irregular" },
+            { base: "have", past: "had", participle: "had", type: "irregular" },
+            { base: "hear", past: "heard", participle: "heard", type: "irregular" },
+            { base: "hide", past: "hid", participle: "hidden", type: "irregular" },
+            { base: "hit", past: "hit", participle: "hit", type: "irregular" },
+            { base: "hold", past: "held", participle: "held", type: "irregular" },
+            { base: "hurt", past: "hurt", participle: "hurt", type: "irregular" },
+            { base: "keep", past: "kept", participle: "kept", type: "irregular" },
+            { base: "kneel", past: "knelt", participle: "knelt", type: "irregular" },
+            { base: "know", past: "knew", participle: "known", type: "irregular" },
+            { base: "lay", past: "laid", participle: "laid", type: "irregular" },
+            { base: "lead", past: "led", participle: "led", type: "irregular" },
+            { base: "leave", past: "left", participle: "left", type: "irregular" },
+            { base: "lend", past: "lent", participle: "lent", type: "irregular" },
+            { base: "let", past: "let", participle: "let", type: "irregular" },
+            { base: "lie", past: "lay", participle: "lain", type: "irregular" },
+            { base: "light", past: "lit", participle: "lit", type: "irregular" },
+            { base: "lose", past: "lost", participle: "lost", type: "irregular" },
+            { base: "make", past: "made", participle: "made", type: "irregular" },
+            { base: "mean", past: "meant", participle: "meant", type: "irregular" },
+            { base: "meet", past: "met", participle: "met", type: "irregular" },
+            { base: "pay", past: "paid", participle: "paid", type: "irregular" },
+            { base: "put", past: "put", participle: "put", type: "irregular" },
+            { base: "read", past: "read", participle: "read", type: "irregular" },
+            { base: "ride", past: "rode", participle: "ridden", type: "irregular" },
+            { base: "ring", past: "rang", participle: "rung", type: "irregular" },
+            { base: "rise", past: "rose", participle: "risen", type: "irregular" },
+            { base: "run", past: "ran", participle: "run", type: "irregular" },
+            { base: "say", past: "said", participle: "said", type: "irregular" },
+            { base: "see", past: "saw", participle: "seen", type: "irregular" },
+            { base: "sell", past: "sold", participle: "sold", type: "irregular" },
+            { base: "send", past: "sent", participle: "sent", type: "irregular" },
+            { base: "set", past: "set", participle: "set", type: "irregular" },
+            { base: "sew", past: "sewed", participle: "sewn/sewed", type: "irregular" },
+            { base: "shake", past: "shook", participle: "shaken", type: "irregular" },
+            { base: "shine", past: "shone", participle: "shone", type: "irregular" },
+            { base: "shoot", past: "shot", participle: "shot", type: "irregular" },
+            { base: "show", past: "showed", participle: "shown/showed", type: "irregular" },
+            { base: "shrink", past: "shrank", participle: "shrunk", type: "irregular" },
+            { base: "shut", past: "shut", participle: "shut", type: "irregular" },
+            { base: "sing", past: "sang", participle: "sung", type: "irregular" },
+            { base: "sink", past: "sank", participle: "sunk", type: "irregular" },
+            { base: "sit", past: "sat", participle: "sat", type: "irregular" },
+            { base: "sleep", past: "slept", participle: "slept", type: "irregular" },
+            { base: "slide", past: "slid", participle: "slid", type: "irregular" },
+            { base: "speak", past: "spoke", participle: "spoken", type: "irregular" },
+            { base: "spend", past: "spent", participle: "spent", type: "irregular" },
+            { base: "spit", past: "spat", participle: "spat", type: "irregular" },
+            { base: "split", past: "split", participle: "split", type: "irregular" },
+            { base: "spread", past: "spread", participle: "spread", type: "irregular" },
+            { base: "spring", past: "sprang", participle: "sprung", type: "irregular" },
+            { base: "stand", past: "stood", participle: "stood", type: "irregular" },
+            { base: "steal", past: "stole", participle: "stolen", type: "irregular" },
+            { base: "stick", past: "stuck", participle: "stuck", type: "irregular" },
+            { base: "sting", past: "stung", participle: "stung", type: "irregular" },
+            { base: "stink", past: "stank", participle: "stunk", type: "irregular" },
+            { base: "strike", past: "struck", participle: "struck", type: "irregular" },
+            { base: "swear", past: "swore", participle: "sworn", type: "irregular" },
+            { base: "sweep", past: "swept", participle: "swept", type: "irregular" },
+            { base: "swim", past: "swam", participle: "swum", type: "irregular" },
+            { base: "swing", past: "swung", participle: "swung", type: "irregular" },
+            { base: "take", past: "took", participle: "taken", type: "irregular" },
+            { base: "teach", past: "taught", participle: "taught", type: "irregular" },
+            { base: "tear", past: "tore", participle: "torn", type: "irregular" },
+            { base: "tell", past: "told", participle: "told", type: "irregular" },
+            { base: "think", past: "thought", participle: "thought", type: "irregular" },
+            { base: "understand", past: "understood", participle: "understood", type: "irregular" },
+            { base: "wake", past: "woke", participle: "woken", type: "irregular" },
+            { base: "wear", past: "wore", participle: "worn", type: "irregular" },
+            { base: "weep", past: "wept", participle: "wept", type: "irregular" },
+            { base: "win", past: "won", participle: "won", type: "irregular" },
+            { base: "write", past: "wrote", participle: "written", type: "irregular" }
+
+            // // REGULARES
+            // { base: "accept", past: "accepted", participle: "accepted", type: "regular" },
+            // { base: "ask", past: "asked", participle: "asked", type: "regular" },
+            // { base: "call", past: "called", participle: "called", type: "regular" },
+            // { base: "clean", past: "cleaned", participle: "cleaned", type: "regular" },
+            // { base: "close", past: "closed", participle: "closed", type: "regular" },
+            // { base: "cook", past: "cooked", participle: "cooked", type: "regular" },
+            // { base: "dance", past: "danced", participle: "danced", type: "regular" },
+            // { base: "finish", past: "finished", participle: "finished", type: "regular" },
+            // { base: "help", past: "helped", participle: "helped", type: "regular" },
+            // { base: "jump", past: "jumped", participle: "jumped", type: "regular" },
+            // { base: "kiss", past: "kissed", participle: "kissed", type: "regular" },
+            // { base: "learn", past: "learned", participle: "learned", type: "regular" },
+            // { base: "listen", past: "listened", participle: "listened", type: "regular" },
+            // { base: "live", past: "lived", participle: "lived", type: "regular" },
+            // { base: "love", past: "loved", participle: "loved", type: "regular" },
+            // { base: "move", past: "moved", participle: "moved", type: "regular" },
+            // { base: "need", past: "needed", participle: "needed", type: "regular" },
+            // { base: "open", past: "opened", participle: "opened", type: "regular" },
+            // { base: "play", past: "played", participle: "played", type: "regular" },
+            // { base: "rain", past: "rained", participle: "rained", type: "regular" },
+            // { base: "remember", past: "remembered", participle: "remembered", type: "regular" },
+            // { base: "show", past: "showed", participle: "showed", type: "regular" },
+            // { base: "start", past: "started", participle: "started", type: "regular" },
+            // { base: "study", past: "studied", participle: "studied", type: "regular" },
+            // { base: "talk", past: "talked", participle: "talked", type: "regular" },
+            // { base: "travel", past: "traveled", participle: "traveled", type: "regular" },
+            // { base: "try", past: "tried", participle: "tried", type: "regular" },
+            // { base: "use", past: "used", participle: "used", type: "regular" },
+            // { base: "visit", past: "visited", participle: "visited", type: "regular" },
+            // { base: "walk", past: "walked", participle: "walked", type: "regular" },
+            // { base: "want", past: "wanted", participle: "wanted", type: "regular" },
+            // { base: "watch", past: "watched", participle: "watched", type: "regular" },
+            // { base: "work", past: "worked", participle: "worked", type: "regular" }
+        ];
+
+        let currentVerb = {};
+        let correctAnswers = 0;
+        let totalQuestions = 0;
+
+        function randomVerb() {
+            randomNumber = Math.random();
+            currentVerb = verbs[Math.floor(randomNumber * verbs.length)];
+            console.log(currentVerb, randomNumber, verbs.length);
+
+            document.getElementById("baseVerb").textContent = currentVerb.base;
+
+            document.getElementById("pastSimple").value = "";
+            document.getElementById("pastParticiple").value = "";
+
+            document.getElementById("result").textContent = "";
+            document.getElementById("result").className = "result";
+        }
+
+        function checkAnswer() {
+            const userPast = document.getElementById("pastSimple").value.trim().toLowerCase();
+            const userParticiple = document.getElementById("pastParticiple").value.trim().toLowerCase();
+
+            totalQuestions++;
+
+            const correctPast = currentVerb.past;
+            const correctParticiple = currentVerb.participle;
+
+            if (userPast === correctPast && userParticiple === correctParticiple) {
+                correctAnswers++;
+                document.getElementById("result").textContent = "✅ ¡Correct!";
+                document.getElementById("result").classList.add("correct");
+            } else {
+                document.getElementById("result").innerHTML = `❌ Wrong<br>Past Simple: <b>${correctPast}</b><br>Past Participle: <b>${correctParticiple}</b>`;
+                document.getElementById("result").classList.add("incorrect");
+            }
+
+            document.getElementById("score").textContent = `Score: ${correctAnswers} / ${totalQuestions}`;
+            setTimeout(randomVerb, 2500);
+        }
+
+        randomVerb();
+    </script>
+
+</body>
+
+</html>
